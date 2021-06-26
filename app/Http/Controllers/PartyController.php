@@ -37,9 +37,42 @@ class PartyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request){
+        // dd($request->all());
+
+        $data= $request->validate([
+
+            'company_name' => 'required|max:100',
+            'owner_name' => 'required|max:100',
+            'party_type' => 'required',
+            'email' => 'nullable',
+            'address' => 'nullable',
+            'phone' => 'required|max:15',
+            'balance' => 'required|numeric',
+            'balance_type' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
+            'description' => 'nullable',
+
+        ]);
+        
+
+        //file upload
+
+            if($request->hasFile('image')){
+                $request->image->store('public/images');
+                $data['image'] = 'images/' . $request-> image->hashName();
+            }
+           
+           
+        //insert DB
+        party::create($data);
+
+        //message
+            $request->session()->flash("message", 'Party Reg. has been Successfully Done');
+            
+        //view
+        return back();
+    
     }
 
     /**

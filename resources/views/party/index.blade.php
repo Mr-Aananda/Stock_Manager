@@ -1,6 +1,6 @@
 @extends('layout.master')
 
-@section('title', $meta['title']);
+@section('title', $meta['title'])
 
 @section('main')
     <div class="container">

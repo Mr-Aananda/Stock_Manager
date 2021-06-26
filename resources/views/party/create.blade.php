@@ -1,86 +1,118 @@
 @extends('layout.master')
 
-@section('title', $meta['title']);
+@section('title', $meta['title'])
 
 @section('main')
 
-    <div class="container">
+<div class="container">
 
-        <h3 class="mt-4 mb-3 text-center fw-bold">Party Informatoin</h3>
+      {{-- success message --}}
+      @if(Session::has('success'))
+        {{ Session::get('success') }} 
+     @endif 
 
-        <div>
-            <form action="" >
-                <div class="row">
-                    <div class="mb-3 col-sm-6">
-                        <label for="companyName" class="form-label">Organization/Company Name :</label>
-                        <input type="text" class="form-control" id="companyName">
-                    </div>
-                    <div class="mb-3 col-sm-6 ">
-                        <label for="ownerName" class="form-label">Owner Name :</label>
-                        <input type="text" class="form-control" id="ownerName">
-                    </div>
+    <h3 class="mt-4 mb-3 text-center fw-bold">Party Informatoin</h3>
+    <form action="{{ route('party.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
 
-                    <div class="mb-3 col-sm-12">
-                        <label for="email" class="form-label">Email :</label>
-                        <input type="email" class="form-control" id="email" placeholder="example@gmail.com">
-                    </div>
+        <div class="row">
+            <div class="mb-3 col-sm-4">
+                <label for="companyName" class="form-label">Organization/Company Name :</label>
+                <input type="text" name="company_name" class="form-control" id="companyName">
+                    @error('company_name')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+            </div>
 
-                    <div class="mb-3 col-sm-8">
-                        <label for="address" class="form-label">Address :</label>
-                        <input type="text" class="form-control" id="address">
-                    </div>
-                    <div class="mb-3 col-sm-4">
-                        <label for="phone" class="form-label">Phone No :</label>
-                        <input type="text" class="form-control" id="phone">
-                    </div>
+            <div class="mb-3 col-sm-4">
+                <label for="ownerName" class="form-label">Owner Name :</label>
+                <input type="text" name="owner_name" class="form-control" id="ownerName">
+                @error('owner_name')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
 
-                    <div class="mb-3 col-sm-12">
-                        <label for="formFile" class="form-label">Upload Image</label>
-                        <input class="form-control" type="file" id="formFile">
-                    </div>
+            <div class="mb-3 col-sm-4">
+                <label class="form-label">&nbsp;</label>
+                <select name="party_type" class="form-select" >
+                    <option selected disabled>Select party type</option>
+                    <option value="1">Customer</option>
+                    <option value="2">Supplier</option>
+                </select>
+                @error('party_type')
+                <small class="text-danger">{{ $message }}</small>
+                 @enderror
+            </div>
 
-                   <div class="mb-3 col-sm-6">
-                    <div class="input-group">
-                        <span class="input-group-text fw-bold ">Balance:</span>
-                        {{-- <label for="number" class="form-label">Balance</label> --}}
-                        <input type="number" class="form-control form-control-lg" id="number" placeholder="0.00">
-                      </div>
-                   </div>
+            <div class="mb-3 col-sm-12">
+                <label for="email" class="form-label">Email :</label>
+                <input type="email" name="email" class="form-control" id="email" placeholder="example@gmail.com">
+                @error('email')
+                <small class="text-danger">{{ $message }}</small>
+                 @enderror
+            </div>
 
-                   <div class="mb-3 col-sm-3">
-                      <select class="form-select  form-select-lg" >
-                        <option selected>Party Type</option>
-                        <option value="1">Customer</option>
-                        <option value="2">Supplier</option>
-                      </select>
-                   </div>
-  
-                   <div class="mb-3 col-sm-3">
-                    <select class="form-select form-select-lg" >
-                        <option selected>Balance Type</option>
-                        <option value="1">Payable</option>
-                        <option value="2">Receiveable</option>
-                      </select>
-                   </div>
-                
-                    <div class="mb-3 col-sm-12">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" rows="3"></textarea>
-                     </div>
+            <div class="mb-3 col-sm-8">
+                <label for="address" class="form-label">Address :</label>
+                <input type="text" name="address" class="form-control" id="address">
+                @error('address')
+                <small class="text-danger">{{ $message }}</small>
+                 @enderror
+            </div>
 
-            
+            <div class="mb-3 col-sm-4">
+                <label for="phone" class="form-label">Phone No :</label>
+                <input type="text" name="phone" class="form-control" id="phone">
+                @error('phone')
+                <small class="text-danger">{{ $message }}</small>
+                 @enderror
+            </div>
+
+            <div class="mb-3 col-sm-6">
+                <div class="input-group">
+                    <span class="input-group-text fw-bold ">BDT</span>
+                    <input type="text" name="balance" class="form-control form-control-lg" id="number" placeholder="0.00">
+                    @error('balance')
+                    <small class="text-danger">{{ $message }}</small>
+                     @enderror
                 </div>
+                <small>Possitive(+) balance receiveable & negative(-) balance payable.</small>
+            </div>
 
-            
-            </form>
+            <div class="mb-3 col-sm-6">
+                <select name="balance_type" class="form-select form-select-lg" >
+                    <option selected disabled>Balance Type</option>
+                    <option value="1">Payable</option>
+                    <option value="2">Receiveable</option>
+                </select>
+                @error('balance_type')
+                <small class="text-danger">{{ $message }}</small>
+                 @enderror
+            </div>
 
+            <div class="mb-3 col-sm-12">
+                <label for="image" class="form-label">Upload Image</label>
+                <input type="file" name="image" class="form-control" id="image">
+                @error('image')
+                <small class="text-danger">{{ $message }}</small>
+                 @enderror
+            </div>
+
+            <div class="mb-3 col-sm-12">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" class="form-control" id="description" rows="3"></textarea>
+                @error('description')
+                <small class="text-danger">{{ $message }}</small>
+                 @enderror
+            </div>
+
+            <div class="mb-3 ">
+                <button type="submit" class="btn btn-primary">
+                    <span>Submit</span>
+                </button>
+            </div>
         </div>
-        
-   
-
-        {{-- class="d-flex justify-content-center" --}}
-
-     
-    </div>
+    </form>
+</div>
     
 @endsection
